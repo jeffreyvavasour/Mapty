@@ -10,7 +10,6 @@ const inputDuration = document.querySelector('.form__input--duration');
 const inputCadence = document.querySelector('.form__input--cadence');
 const inputElevation = document.querySelector('.form__input--elevation');
 
-let count = 0;
 let crds;
 
 // Page onLoad - render workouts on map and render workouts list - from local storage
@@ -24,7 +23,9 @@ window.addEventListener('load', function () {
           const month = date.getMonth();
           const day = date.toLocaleString('default', { month: 'long' });
           const html = `
-          <li class="workout workout--${obj.type}" data-id="${obj.number}">
+          <li class="workout workout--${obj.type}" data-id="${arr.findIndex(
+            x => x === obj
+          )}">
           <h2 class="workout__title">${obj.type} on ${month} ${day}</h2>
           <div class="workout__details">
             <span class="workout__icon">${obj.type}</span>
@@ -73,7 +74,7 @@ window.addEventListener('load', function () {
               // get cords of clicked workout
               const localArr = JSON.parse(localStorage.getItem('existingArr'));
               localArr.forEach(obj => {
-                if (obj.number == workout.dataset.id) {
+                if (localArr.findIndex(x => x === obj) == workout.dataset.id) {
                   cords = obj.coordinates;
                   [lat, lon] = cords;
                   // pan to workout on map
@@ -134,7 +135,6 @@ window.addEventListener('load', function () {
         // Put these values into an object
         const obj = {
           coordinates: crds,
-          number: count,
           type: `${exerciseType}`,
           distance: `${distance}`,
           duration: `${duration}`,
@@ -163,9 +163,6 @@ window.addEventListener('load', function () {
         inputCadence.parentElement.classList.remove('form__row--hidden');
         form.reset();
         form.classList.add('hidden');
-
-        // Add to array count
-        count++;
       }
 
       form.addEventListener('submit', formSubmit);
