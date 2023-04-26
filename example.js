@@ -1,4 +1,5 @@
-'use strict';
+"use strict";
+// test
 
 class Workout {
   constructor(coordinates, distance, duration) {
@@ -9,7 +10,7 @@ class Workout {
 }
 
 class Running extends Workout {
-  type = 'running';
+  type = "running";
   constructor(coordinates, distance, duration, cadence) {
     super(coordinates, distance, duration);
     this.cadence = cadence;
@@ -17,7 +18,7 @@ class Running extends Workout {
 }
 
 class Cycling extends Workout {
-  type = 'cycling';
+  type = "cycling";
   constructor(coordinates, distance, duration, elevation) {
     super(coordinates, distance, duration);
     this.elevation = elevation;
@@ -25,28 +26,28 @@ class Cycling extends Workout {
   }
 }
 
-const form = document.querySelector('.form');
-const containerWorkouts = document.querySelector('.workouts');
-const inputType = document.querySelector('.form__input--type');
-const inputDistance = document.querySelector('.form__input--distance');
-const inputDuration = document.querySelector('.form__input--duration');
-const inputCadence = document.querySelector('.form__input--cadence');
-const inputElevation = document.querySelector('.form__input--elevation');
+const form = document.querySelector(".form");
+const containerWorkouts = document.querySelector(".workouts");
+const inputType = document.querySelector(".form__input--type");
+const inputDistance = document.querySelector(".form__input--distance");
+const inputDuration = document.querySelector(".form__input--duration");
+const inputCadence = document.querySelector(".form__input--cadence");
+const inputElevation = document.querySelector(".form__input--elevation");
 
 class App {
   #map;
   #crds;
   constructor() {
     this._makeMap();
-    form.addEventListener('submit', this._formSubmit.bind(this));
-    inputType.addEventListener('change', this._setLastFormRow);
+    form.addEventListener("submit", this._formSubmit.bind(this));
+    inputType.addEventListener("change", this._setLastFormRow);
   }
 
   _makeMap() {
     navigator.geolocation.getCurrentPosition(
       this._getLocation.bind(this),
       function () {
-        alert('Could not get location');
+        alert("Could not get location");
       }
     );
   }
@@ -55,16 +56,16 @@ class App {
     const { latitude } = position.coords;
     const { longitude } = position.coords;
     this.#crds = [latitude, longitude];
-    this.#map = L.map('map').setView(this.#crds, 13);
+    this.#map = L.map("map").setView(this.#crds, 13);
 
-    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
       attribution:
         '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
     }).addTo(this.#map);
 
     this._setMarker(this.#crds);
 
-    this.#map.addEventListener('click', this._onMapClick.bind(this));
+    this.#map.addEventListener("click", this._onMapClick.bind(this));
 
     this._renderWorkoutsList();
     this._renderWorkoutsMap();
@@ -75,21 +76,21 @@ class App {
   }
 
   _onMapClick(e) {
-    form.classList.remove('hidden');
+    form.classList.remove("hidden");
     inputDistance.focus();
     this.#crds = [e.latlng.lat, e.latlng.lng];
   }
 
   _renderWorkoutsList() {
-    const arr = localStorage.getItem('existingArr')
-      ? JSON.parse(localStorage.getItem('existingArr'))
+    const arr = localStorage.getItem("existingArr")
+      ? JSON.parse(localStorage.getItem("existingArr"))
       : [];
     if (arr === []) return;
     // Render workouts in list & map
-    arr.forEach(obj => {
+    arr.forEach((obj) => {
       const html = `
         <li class="workout workout--${obj.type}" data-id="${arr.findIndex(
-        x => x === obj
+        (x) => x === obj
       )}">
         <h2 class="workout__title">${obj.type[0].toUpperCase()}${obj.type.slice(
         1
@@ -129,24 +130,24 @@ class App {
         </li>`;
 
       // Put each one into user interface
-      containerWorkouts.insertAdjacentHTML('beforeend', html);
+      containerWorkouts.insertAdjacentHTML("beforeend", html);
     });
 
     // Should have event listener on workouts container
 
     //
-    const workoutsRendered = document.querySelectorAll('.workout');
-    workoutsRendered.forEach(workout => {
-      workout.addEventListener('click', this._panToMarker.bind(this));
+    const workoutsRendered = document.querySelectorAll(".workout");
+    workoutsRendered.forEach((workout) => {
+      workout.addEventListener("click", this._panToMarker.bind(this));
     });
   }
 
   _renderWorkoutsMap() {
-    const arr = localStorage.getItem('existingArr')
-      ? JSON.parse(localStorage.getItem('existingArr'))
+    const arr = localStorage.getItem("existingArr")
+      ? JSON.parse(localStorage.getItem("existingArr"))
       : [];
     if (arr === []) return;
-    arr.forEach(obj => {
+    arr.forEach((obj) => {
       L.marker(obj.coordinates)
         .addTo(this.#map)
         .bindPopup(this._newPopUp(obj.type))
@@ -157,18 +158,18 @@ class App {
   _formatDate() {
     const date = new Date();
     const month = date.getMonth();
-    const day = date.toLocaleString('default', { month: 'long' });
+    const day = date.toLocaleString("default", { month: "long" });
     return `${month} ${day}`;
   }
 
   _panToMarker(e) {
     let lat;
     let lon;
-    const localArr = JSON.parse(localStorage.getItem('existingArr'));
-    localArr.forEach(obj => {
+    const localArr = JSON.parse(localStorage.getItem("existingArr"));
+    localArr.forEach((obj) => {
       if (
-        localArr.findIndex(x => x === obj) ==
-        e.target.closest('.workout').dataset.id
+        localArr.findIndex((x) => x === obj) ==
+        e.target.closest(".workout").dataset.id
       ) {
         [lat, lon] = obj.coordinates;
       }
@@ -179,7 +180,7 @@ class App {
   _newPopUp(type) {
     const date = new Date();
     const month = date.getMonth();
-    const day = date.toLocaleString('default', { month: 'long' });
+    const day = date.toLocaleString("default", { month: "long" });
     const new_popup = L.popup({
       maxWidth: 250,
       maxHeight: 100,
@@ -205,18 +206,18 @@ class App {
     // IF inputType.value = RUNNING -> NEW RUNNING OBJECT
     // IF inputType.value = CYCLING -> NEW CYCLING OBJECT
     let workout;
-    if (exerciseType === 'running') {
+    if (exerciseType === "running") {
       workout = new Running(this.#crds, distance, duration, cadence);
     }
-    if (exerciseType === 'cycling') {
+    if (exerciseType === "cycling") {
       workout = new Cycling(this.#crds, distance, duration, elevation);
     }
 
     // Push that object into local storage
-    let existingArr = JSON.parse(localStorage.getItem('existingArr'));
+    let existingArr = JSON.parse(localStorage.getItem("existingArr"));
     if (existingArr == null) existingArr = [];
     existingArr.push(workout);
-    localStorage.setItem('existingArr', JSON.stringify(existingArr));
+    localStorage.setItem("existingArr", JSON.stringify(existingArr));
 
     // Remove all workouts from Div
     this._removeWorkouts();
@@ -232,28 +233,28 @@ class App {
   }
 
   _setLastFormRow() {
-    if (inputType.value === 'running') {
-      inputElevation.parentElement.classList.add('form__row--hidden');
-      inputCadence.parentElement.classList.remove('form__row--hidden');
+    if (inputType.value === "running") {
+      inputElevation.parentElement.classList.add("form__row--hidden");
+      inputCadence.parentElement.classList.remove("form__row--hidden");
     }
-    if (inputType.value === 'cycling') {
-      inputCadence.parentElement.classList.add('form__row--hidden');
-      inputElevation.parentElement.classList.remove('form__row--hidden');
+    if (inputType.value === "cycling") {
+      inputCadence.parentElement.classList.add("form__row--hidden");
+      inputElevation.parentElement.classList.remove("form__row--hidden");
     }
   }
 
   _removeWorkouts() {
-    const workouts = document.querySelectorAll('.workout');
-    workouts.forEach(workout => {
+    const workouts = document.querySelectorAll(".workout");
+    workouts.forEach((workout) => {
       workout.remove();
     });
   }
 
   _resetForm() {
-    inputElevation.parentElement.classList.add('form__row--hidden');
-    inputCadence.parentElement.classList.remove('form__row--hidden');
+    inputElevation.parentElement.classList.add("form__row--hidden");
+    inputCadence.parentElement.classList.remove("form__row--hidden");
     form.reset();
-    form.classList.add('hidden');
+    form.classList.add("hidden");
   }
 }
 
